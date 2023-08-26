@@ -3,6 +3,7 @@ import 'database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'photo.dart';
 import 'utility.dart';
+import 'map.dart';
 
 void main() {
   runApp(const MainApp());
@@ -66,8 +67,20 @@ class MyAppState extends ChangeNotifier {
 class _HomePage extends State<HomePage> {
   int currentPageIndex = 0;
 
+
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
+    Widget page;
+    switch (currentPageIndex) {
+      case 0:
+        page = const MapGenerator();
+        break;
+      case 1:
+        page = const Placeholder();
+      default:
+        throw UnimplementedError('Not implemented :<');
+    }
     return Scaffold(
       bottomNavigationBar: NavigationBar (
           onDestinationSelected: (int index) {
@@ -89,6 +102,8 @@ class _HomePage extends State<HomePage> {
             ),
           ],
         ),
-      );
+  
+      body: page,
+    );
     }
   }
