@@ -37,7 +37,7 @@ class _HomePage extends State<HomePage> {
     Widget page;
     switch (currentPageIndex) {
       case 0:
-        page = MapGenerator();
+        page = const MapGenerator();
         break;
       case 1:
         page = const Placeholder();
