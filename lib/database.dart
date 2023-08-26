@@ -41,11 +41,11 @@ class DBprovider {
     if (_database != null) {
       return _database!;
     }
-    _database = initDB();
+    _database = await initDB();
     return _database!;
   }
 
-  initDB() async {
+  Future<Database> initDB() async {
     Directory docDirectory = await getApplicationDocumentsDirectory();
     String path = join(docDirectory.path, 'data.db');
 
@@ -68,19 +68,19 @@ class DBprovider {
       }
     );
   }
+
   Future<List<BinLocation>> getAllBins() async {
     final Database db = await database;
 
-    List <Map> results = await db.query(
-      "binlocation", columns: BinLocation.columns, orderBy: "id ASC"
+    List <Map<String, dynamic>> results = await db.query("binlocation");
+  
+    return List.generate(results.length, (i) {
+      return BinLocation(
+        id: results[i]['id'],
+        longitude: results[i]['longitude'],
+        latitude: results[i]['latitude'],
+      );
+    }
     );
-
-    List<BinLocation> locations = List.empty();
-    results.forEach((result) {
-      BinLocation location = BinLocation.fromMap(result);
-      locations.add(location);
-    });
-
-    return locations;
   }
 }

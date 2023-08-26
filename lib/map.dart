@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'app_state.dart';
 import 'database.dart';
 
 class MapGenerator extends StatefulWidget {
@@ -15,7 +14,7 @@ class _MapGeneratorState extends State<MapGenerator> {
   // late GoogleMapController mapController;
   LatLng? _currentPosition;
   bool _isLoading = true;
-  List<BinLocation>? locations;
+  var locations;
 
   @override
   void initState() {
@@ -38,7 +37,7 @@ class _MapGeneratorState extends State<MapGenerator> {
       _isLoading = false;
     });
 
-    locations = await DBprovider.db.getAllBins();
+    locations =await DBprovider.db.getAllBins();
   }
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
   // void _onMapCreated(GoogleMapController controller) {
@@ -59,7 +58,7 @@ class _MapGeneratorState extends State<MapGenerator> {
           position: _currentPosition!,
         ),
 
-        for (var location in locations!)
+        for (var location in locations)
           Marker(
             markerId: const MarkerId('bin'),
             position: LatLng(location.latitude, location.longitude),
