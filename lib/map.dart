@@ -16,6 +16,27 @@ class _MapGeneratorState extends State<MapGenerator> {
   bool _isLoading = true;
   var locations;
 
+  late GoogleMapController mapController;
+  Set<Marker> markers = {};
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  void _onMapTapped(LatLng tappedPosition) {
+    setState(() {
+      markers.add(
+        Marker(
+          markerId: MarkerId(tappedPosition.toString()),
+          position: tappedPosition,
+          onTap: () {
+            print('Marker tapped: ${tappedPosition.latitude}, ${tappedPosition.longitude}');
+          },
+        ),
+      );
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -46,24 +67,13 @@ class _MapGeneratorState extends State<MapGenerator> {
 
     return _isLoading? const Center(child: CircularProgressIndicator(),) : 
       GoogleMap(
-      // onMapCreated: _onMapCreated,
+      onMapCreated: _onMapCreated,
+      onTap: _onMapTapped,
       initialCameraPosition: CameraPosition(
           target: _currentPosition!,
           zoom: 15.0,
       ),
-      markers: {
-        Marker( 
-          markerId: const MarkerId('Home'),
-          icon: currentLocationIcon,
-          position: _currentPosition!,
-        ),
-
-        for (var location in locations)
-          Marker(
-            markerId: const MarkerId('bin'),
-            position: LatLng(location.latitude, location.longitude),
-          )
-      }
+      markers: markers
     );
   }
 }
